@@ -13,6 +13,7 @@ class PageController
     private $dbJobs;
     private $dbCat;
     private $dbApp;
+    private $dbPat;
     private $dbContact;
 
     private $get;
@@ -21,6 +22,7 @@ class PageController
     
     public function __construct(
         DatabaseTable $dbUsers,
+        DatabaseTable $dbPat,
         DatabaseTable $dbContact,
         array $get,
         array $post

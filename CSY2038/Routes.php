@@ -16,8 +16,9 @@ class Routes implements \CSY\Routes
         $databaseCategories = new DatabaseTable($pdo, 'category', 'id');
         $databaseApplicants = new DatabaseTable($pdo, 'applicants', 'id');
         $databaseUsers = new DatabaseTable($pdo, 'user', 'id');
+        $databasePat = new DatabaseTable($pdo, 'patients', 'id');
         $databaseContact = new DatabaseTable($pdo, 'contact', 'id');
-        $pageController = new PageController($databaseUsers, $databaseContact, $_GET, $_POST);
+        $pageController = new PageController($databaseUsers, $databasePat, $databaseContact, $_GET, $_POST);
         $page = $pageController->home();
         if ($_SERVER['REQUEST_URI'] !== '/') {
             $functionName = ltrim(explode('?', $_SERVER['REQUEST_URI'])[0], '/');
@@ -27,7 +28,7 @@ class Routes implements \CSY\Routes
 
                 $pageController = "CSY2038\Controllers\\" . ucfirst($r[0]) . "Controller";
                 $functionName = $r[1];
-                $pageController = new $pageController($databaseUsers, $databaseContact, $_GET, $_POST);
+                $pageController = new $pageController($databaseUsers, $databasePat, $databaseContact, $_GET, $_POST);
                 $page = $pageController->$functionName();
             } else {
                 $page = $pageController->$functionName();

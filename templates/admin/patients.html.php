@@ -14,6 +14,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>DOB</th>
                     <th>Age</th>
                     <th>Gender</th>
                     <th>Email</th>
@@ -23,15 +24,16 @@
 
             </thead>
             <tbody>
-
+            <?php foreach ($patients as $patient): ?>
                 <tr>
-                    <td>John Doe</td>
-                    <td>30</td>
-                    <td>Male</td>
-                    <td>johndoe@email.com</td>
-                    <td>123-456-7890</td>
+                    <td><?= htmlspecialchars($patient['name']) ?></td>
+                    <td><?= htmlspecialchars($patient['dob']) ?></td>
+                    <td><?= htmlspecialchars($patient['age']) ?></td>
+                    <td><?= htmlspecialchars($patient['gender']) ?></td>
+                    <td><?= htmlspecialchars($patient['email']) ?></td>
+                    <td><?= htmlspecialchars($patient['phone_number']) ?></td>
                 </tr>
-
+            <?php endforeach; ?>
             </tbody>
         </table>
     </section>

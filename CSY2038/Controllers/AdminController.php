@@ -11,7 +11,7 @@ class AdminController
     private $dbJobs;
     private $dbCat;
     private $dbUsers;
-    private $dbApp;
+    private $dbPat;
 
     private $post;
     private $pdo;
@@ -21,6 +21,7 @@ class AdminController
 
     public function __construct(
         DatabaseTable $dbUsers,
+        DatabaseTable $dbPat,
         DatabaseTable $dbContact,
         array $get,
         array $post
@@ -28,6 +29,7 @@ class AdminController
         $myDb = new MyPDO();
         $this->pdo = $myDb->db();
         $this->dbUsers = $dbUsers;
+        $this->dbPat = $dbPat;
         $this->dbContact = $dbContact;
         $this->get = $get;
         $this->post = $post;
@@ -67,12 +69,12 @@ class AdminController
     {
         $this->session();
         $this->chklogin();
-
+        $patients = $this->dbPat->findAll();
 
         return [
             'template' => 'admin/patients.html.php',
             'title' => 'Patients',
-            'variables' => []
+            'variables' => ["patients" => $patients]
         ];
     }
 
