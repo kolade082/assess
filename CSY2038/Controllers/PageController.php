@@ -13,10 +13,12 @@ class PageController
     private $dbJobs;
     private $dbCat;
     private $dbApp;
+    private $dbPat;
     private $dbContact;
 
     public function __construct(
         DatabaseTable $dbUsers,
+        DatabaseTable $dbPat,
         DatabaseTable $dbContact,
         array $get,
         array $post
