@@ -60,10 +60,6 @@ class DatabaseTable
         $stmt->execute($record);
     }
 
-    public function insertPatientRecord($record): void
-    {
-        
-    }
 
     public function customFind($statement, $criteria){
         $stmt = $this->pdo->prepare($statement);
