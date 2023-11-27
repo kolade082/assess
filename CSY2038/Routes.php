@@ -12,9 +12,7 @@ class Routes implements \CSY\Routes
     {
         $myDb = new MyPDO();
         $pdo = $myDb->db();
-        $databaseJobs = new DatabaseTable($pdo, 'job', 'id');
-        $databaseCategories = new DatabaseTable($pdo, 'category', 'id');
-        $databaseApplicants = new DatabaseTable($pdo, 'applicants', 'id');
+
         $databaseUsers = new DatabaseTable($pdo, 'user', 'id');
         $databasePat = new DatabaseTable($pdo, 'patients', 'id');
         $databaseContact = new DatabaseTable($pdo, 'contact', 'id');

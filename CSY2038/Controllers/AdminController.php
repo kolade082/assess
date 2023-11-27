@@ -55,6 +55,78 @@ class AdminController
 
         // You can add more data fetching logic here as needed
 
+        // Define the NHS Digital FHIR API sandbox endpoint
+        $apiUrl = "https://sandbox.api.service.nhs.uk/personal-demographics/FHIR/R4/Patient/9000000009";
+
+        // Set the request headers
+        $headers = [
+            "accept: application/fhir+json",
+            "authorization: Bearer g1112R_ccQ1Ebbb4gtHBP1aaaNM",
+            "nhsd-end-user-organisation-ods: Y12345",
+            "nhsd-session-urid: 555254240100",
+            "x-correlation-id: 11C46F5F-CDEF-4865-94B2-0EE0EDCC26DA",
+            "x-request-id: 60E0B220-8136-4CA5-AE46-1D97EF59D068",
+        ];
+        // Initialize cURL session
+        $ch = curl_init();
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+
+        if(curl_errno($ch)){
+            echo 'Error Occurred: '. curl_error($ch);
+        }else{
+            // Decode the JSON response into a PHP array
+            $jsonArray = json_decode($response, true);
+
+            $selectedData = array();
+            $selectedData['id'] = $jsonArray['id'];
+            if (isset($jsonArray['name']) && is_array($jsonArray['name']) && count($jsonArray['name']) > 0) {
+                // Get the first element of the "name" array
+                $name = $jsonArray['name'][0];
+            
+                // Check if "given" is present in the "name" element
+                if (isset($jsonArray['name']) && is_array($jsonArray['name']) && count($jsonArray['name']) > 0) {
+                    // Get the first element of the "name" array
+                    $name = $jsonArray['name'][0];
+                
+                    // Check if "given" and "family" are present in the "name" element
+                    if (isset($name['given']) && is_array($name['given']) && count($name['given']) > 0
+                        && isset($name['family'])) {
+                        // Store "given" and "family" names in the selected data array
+                        $selectedData['givenName'] = implode(' ', $name['given']);
+                        $selectedData['familyName'] = $name['family'];
+                    }
+                }
+                if (isset($jsonArray['birthDate'])) {
+                    $selectedData['dateOfBirth'] = $jsonArray['birthDate'];
+                }
+                
+                // Check if "telecom" is present in the array
+                if (isset($jsonArray['telecom']) && is_array($jsonArray['telecom']) && count($jsonArray['telecom']) > 0) {
+                    foreach ($jsonArray['telecom'] as $contact) {
+                        // Check if "system" is "phone" or "email" and add to selected data
+                        if (isset($contact['system']) && isset($contact['value'])) {
+                            if ($contact['system'] == 'phone') {
+                                $selectedData['phone'] = $contact['value'];
+                            } elseif ($contact['system'] == 'email') {
+                                $selectedData['email'] = $contact['value'];
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Output the response data
+            print_r($selectedData);
+        }
+
+
+        
         return [
             'template' => 'admin/dashboard.html.php',
             'title' => 'Dashboard',
