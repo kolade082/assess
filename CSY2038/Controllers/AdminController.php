@@ -13,6 +13,10 @@ class AdminController
     private $dbUsers;
     private $dbApp;
 
+    private $post;
+    private $pdo;
+    private $get;
+    private $validator;
     private $dbContact;
 
     public function __construct(
