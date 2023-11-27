@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<phpunit bootstrap="./autoload.php">
+    <testsuites>
+        <testsuite name="tests">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">CSY</directory>
+            <directory suffix=".php">CSY2038</directory>
+        </whitelist>
+    </filter>
+</phpunit>
