@@ -49,11 +49,7 @@
                             <!--  -->
                             <li class="nav-item " id="moblogo">
                             <a class="nav-link active" aria-current="page" href="#"><img src="#" alt="nhs logo" class=""></a>
-                                
                             </li>
-                            <li class="nav-item">
-                                
-                            </li> <!-- should be removed no use -->
                             <li class="nav-item">
                                 <a class="nav-link" href="../about">About Us</a>
                             </li>

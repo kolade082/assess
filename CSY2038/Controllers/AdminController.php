@@ -139,10 +139,10 @@ class AdminController
 
                     $html .= '<div class="anomaly-item">
                     <div class="anomaly-description">
-                        <p>Anomaly Detected: Discrepancy in patient record for Patient ID ' . $patient['id'] . '</p>
+                        <p class="lead" >Anomaly Detected: Discrepancy in patient record for Patient ID ' . $patient['id'] . '</p>
                     </div>
                     <div class="view-details">
-                        <button onclick="viewDetails(this)"
+                        <button class="btn btn-custom" onclick="viewDetails(this)"
                                 data-your-data="' . htmlspecialchars(json_encode($patient), ENT_QUOTES) . '"
                                 data-nhs-data="' . htmlspecialchars(json_encode($nhsData), ENT_QUOTES) . '">
                             View Details
