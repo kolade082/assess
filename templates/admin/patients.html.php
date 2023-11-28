@@ -1,11 +1,11 @@
 <main class="main-dashboard">
-    <div class="dashboard-sidebar">
+<div class="dashboard-sidebar">
         <div class="dashboard-links">
-            <a href="dashboard">Dashboard</a>
-            <a href="patients">Manage Patients</a>
-            <a href="appointments">Appointments</a>
-            <a href="reports">Generate Reports</a>
-            <a href="analytics">Analytics</a>
+            <a class="btn btn-custom my-3" href="dashboard">Dashboard</a>
+            <a class="btn btn-custom my-3" href="patients">Manage Patients</a>
+            <a class="btn btn-custom my-3" href="#">Search Patients</a> <!-- add links search - do anomalies check - display using the current method of viewing anomalies-->
+            <a class="btn btn-custom my-3" href="#">Anomalies</a> <!-- should link to the current method of resolving anomalies -->
+            <a class="btn btn-custom my-3" href="#">Help?</a>  <!-- should link to the contact form -->
         </div>
     </div>
     <section class="dashboard-content">

@@ -247,7 +247,7 @@ input[type="text"]:focus, input[type="password"]:focus {
 .dashboard-sidebar {
     background-color: #005EB8;
     color: white;
-    width: 20%;
+    min-width: 20%;
     flex: 1;
     box-sizing: border-box;
     padding: 10px;
@@ -555,14 +555,14 @@ input[type="text"]:focus, input[type="password"]:focus {
     }
 }
 .anomaly-item {
-    border: 1px solid #ddd;
+    border: 1px solid #f00;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f9f9f9;
+    background-color: #ffd7d7;
 }
 
 .anomaly-item:hover {
@@ -732,4 +732,20 @@ input[type="text"]:focus, input[type="password"]:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.btn-custom{
+    background-color: #0072CE;
+    color: white;
+
+}
+.btn-custom:hover {
+    background-color: #0071ceab; /* Replace with your desired hover color */
+    color: rgb(180, 180, 180); /* Replace with your desired hover text color */
+}
+
+.sync-btn{
+    display: flex;
+    flex-direction: row;;
+    margin-left: 5em;
 }

@@ -4,8 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles.css">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- bootstrap import -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="../styles.css">
 
     <title>Assess</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -14,12 +19,12 @@
 
     <header>
         <div class="header-container">
-            <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) : ?>
+            <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true): ?>
                 <div class="auth-links">
                     <p><a href="../admin/logout">Logout</a></p>
                     <p><a href="../admin/dashboard">Dashboard</a></p>
                 </div>
-            <?php else : ?>
+            <?php else: ?>
                 <div class="auth-links">
                     <p><a href="../admin/register" class="admin-signup">Sign Up</a></p>
                     <p><a href="../admin/login" class="admin-login">Login</a></p>
@@ -66,25 +71,30 @@
     </div>
 
     <footer>
-        &copy; NHS <?= date('Y'); ?>
+        &copy; NHS
+        <?= date('Y'); ?>
     </footer>
 
+    <!-- bootstrap import -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
 </body>
 
 <script>
     let isUser = true;
 
-    document.querySelector('.chat-icon-button').addEventListener('click', function() {
+    document.querySelector('.chat-icon-button').addEventListener('click', function () {
         document.getElementById('chatBox').style.display = 'block';
     });
 
-    document.getElementById('closeChat').addEventListener('click', function() {
+    document.getElementById('closeChat').addEventListener('click', function () {
         document.getElementById('chatBox').style.display = 'none';
     });
 
     // Functionality to handle chat input and display messages
-    document.getElementById('chatInput').addEventListener('keypress', function(event) {
+    document.getElementById('chatInput').addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
             const message = this.value.trim();
             if (message) {

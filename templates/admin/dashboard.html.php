@@ -1,27 +1,34 @@
 <main class="main-dashboard">
+    <!-- can move to a template -->
     <div class="dashboard-sidebar">
         <div class="dashboard-links">
-            <a href="dashboard">Dashboard</a>
-            <a href="patients">Manage Patients</a>
-            <a href="appointments">Appointments</a>
-            <a href="reports">Generate Reports</a>
-            <a href="analytics">Analytics</a>
+            <a class="btn btn-custom my-3" href="dashboard">Dashboard</a>
+            <a class="btn btn-custom my-3" href="patients">Manage Patients</a>
+            <a class="btn btn-custom my-3" href="#">Search Patients</a> <!-- add links -->
+            <a class="btn btn-custom my-3" href="#">Anomalies</a>
+            <a class="btn btn-custom my-3" href="#">Help?</a>
         </div>
     </div>
     <section class="dashboard-content">
         <h1>NHS Patient Record Dashboard</h1>
 
         <div class="dashboard-section">
-            <h2>Recent Activity</h2>
-            <p>Overview of recent system usage, updates, and alerts.</p>
+            <h2 class="h2 fw-bold">Recent Activity</h2>
+            <div class="d-flex flex-row justify-content-between">
+            <p class="lead">Overview of recent system usage, updates, and alerts.</p>
+            <button class="btn btn-custom">SYNC</button>
+            </div>
+            
+            
 
         </div>
 
         <!-- Section for Real-Time Alerts -->
         <div class="dashboard-section">
-            <h2>Real-Time Alerts</h2>
+            <h2 class="h2 fw-bold">Real-Time Alerts</h2>
             <div id="realTimeAlerts">
-                <?=$html?>
+                <?=$html?> <!-- apply this class on the button - class="btn btn-custom"
+                                and p tag -  class="lead" -->
             </div>
         </div>
 
