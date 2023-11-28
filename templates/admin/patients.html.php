@@ -13,6 +13,7 @@
         <table class="patient-details-table">
             <thead>
                 <tr>
+                    <th>NHS ID</th>
                     <th>Name</th>
                     <th>DOB</th>
                     <th>Age</th>
@@ -26,9 +27,10 @@
             <tbody>
             <?php foreach ($patients as $patient): ?>
                 <tr>
-                    <td><?= htmlspecialchars($patient['name']) ?></td>
+                    <td><?= htmlspecialchars($patient['id']) ?></td>
+                    <td><?= htmlspecialchars($patient['firstname']) ?></td>
+                    <td><?= htmlspecialchars($patient['lastname']) ?></td>
                     <td><?= htmlspecialchars($patient['dob']) ?></td>
-                    <td><?= htmlspecialchars($patient['age']) ?></td>
                     <td><?= htmlspecialchars($patient['gender']) ?></td>
                     <td><?= htmlspecialchars($patient['email']) ?></td>
                     <td><?= htmlspecialchars($patient['phone_number']) ?></td>

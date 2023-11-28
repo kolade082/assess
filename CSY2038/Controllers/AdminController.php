@@ -7,9 +7,6 @@ use CSY\MyPDO;
 
 class AdminController
 {
-
-    private $dbJobs;
-    private $dbCat;
     private $dbUsers;
     private $dbPat;
 
@@ -41,25 +38,127 @@ class AdminController
         return ['template' => 'admin/index.html.php', 'title' => 'Admin', 'variables' => []];
     }
 
+
     public function dashboard()
     {
         $this->session();
         $this->chklogin();
 
-        // Example: Fetch recent patient records or any other relevant data
-        // $recentPatients = $this->dbPatients->findRecent();
+        // Define the NHS Digital FHIR API sandbox endpoint
+        $apiUrl = "https://sandbox.api.service.nhs.uk/personal-demographics/FHIR/R4/Patient/9000000009";
 
-        // You can add more data fetching logic here as needed
+        // Set the request headers
+        $headers = [
+            "accept: application/fhir+json",
+            "authorization: Bearer g1112R_ccQ1Ebbb4gtHBP1aaaNM",
+            "nhsd-end-user-organisation-ods: Y12345",
+            "nhsd-session-urid: 555254240100",
+            "x-correlation-id: 11C46F5F-CDEF-4865-94B2-0EE0EDCC26DA",
+            "x-request-id: 60E0B220-8136-4CA5-AE46-1D97EF59D068",
+        ];
+        // Initialize cURL session
+        $ch = curl_init();
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+
+        if(curl_errno($ch)){
+            echo 'Error Occurred: '. curl_error($ch);
+        }else {
+            // Decode the JSON response into a PHP array
+            $jsonArray = json_decode($response, true);
+
+            $nhsData = array();
+            $nhsData['id'] = $jsonArray['id'];
+            if (isset($jsonArray['name']) && is_array($jsonArray['name']) && count($jsonArray['name']) > 0) {
+                // Get the first element of the "name" array
+                $name = $jsonArray['name'][0];
+
+                // Check if "given" is present in the "name" element
+                if (isset($jsonArray['name']) && is_array($jsonArray['name']) && count($jsonArray['name']) > 0) {
+                    // Get the first element of the "name" array
+                    $name = $jsonArray['name'][0];
+
+                    // Check if "given" and "family" are present in the "name" element
+                    if (isset($name['given']) && is_array($name['given']) && count($name['given']) > 0
+                        && isset($name['family'])) {
+                        // Store "given" and "family" names in the selected data array
+                        $nhsData['firstname'] = implode(' ', $name['given']);
+                        $nhsData['lastname'] = $name['family'];
+                    }
+                }
+                if (isset($jsonArray['birthDate'])) {
+                    $nhsData['dob'] = $jsonArray['birthDate'];
+                }
+
+                // Check if "telecom" is present in the array
+                if (isset($jsonArray['telecom']) && is_array($jsonArray['telecom']) && count($jsonArray['telecom']) > 0) {
+                    foreach ($jsonArray['telecom'] as $contact) {
+                        // Check if "system" is "phone" or "email" and add to selected data
+                        if (isset($contact['system']) && isset($contact['value'])) {
+                            if ($contact['system'] == 'phone') {
+                                $nhsData['phone'] = $contact['value'];
+                            } elseif ($contact['system'] == 'email') {
+                                $nhsData['email'] = $contact['value'];
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Output the response data
+
+            //Detect Anomalies:
+            $this->session();
+            $this->chklogin();
+
+            $patients = $this->dbPat->findAll();
+            $anomalies = [];
+            $html = '';
+            foreach ($patients as $patient) {
+
+                if ($patient['firstname'] != $nhsData['firstname'] ||
+                    $patient['lastname'] != $nhsData['lastname'] ||
+                    $patient['dob'] != $nhsData['dob'] ||
+                    $patient['phone_number'] != $nhsData['phone'] ||
+                    $patient['email'] != $nhsData['email']) {
+
+                    $anomalies[] = [
+                        'patientId' => $patient['id'],
+                        'yourData' => $patient,
+                        'nhsData' => $nhsData
+                    ];
+
+                    $html .= '<div class="anomaly-item">
+                    <div class="anomaly-description">
+                        <p>Anomaly Detected: Discrepancy in patient record for Patient ID ' . $patient['id'] . '</p>
+                    </div>
+                    <div class="view-details">
+                        <button onclick="viewDetails(this)"
+                                data-your-data="' . htmlspecialchars(json_encode($patient), ENT_QUOTES) . '"
+                                data-nhs-data="' . htmlspecialchars(json_encode($nhsData), ENT_QUOTES) . '">
+                            View Details
+                        </button>
+                    </div>
+                </div>';
+
+                }
+            }
+
+        }
 
         return [
             'template' => 'admin/dashboard.html.php',
             'title' => 'Dashboard',
-            'variables' => [
-                // 'recentPatients' => $recentPatients
-                // Include other variables as needed
+            'variables' => ['html' => $html
             ]
         ];
     }
+
 
     public function patients()
     {
@@ -170,211 +269,6 @@ class AdminController
         header('Location: index');
     }
 
-    // public function categories()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-
-    //     $categories = $this->dbCat->findAll();
-
-    //     return ['template' => "admin/categories.html.php", 'title' =>
-    //     'categories', 'variables' => ["categories" => $categories]];
-    // }
-
-    // public function applicants()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-
-    //     $job = $this->dbJobs->find("id", $this->get['id'])[0];
-    //     $applicants = $this->dbApp->find("jobId", $this->get['id']);
-
-    //     return ['template' => "admin/applicants.html.php", 'title' => 'applicants', 'variables' =>
-    //     ["job" => $job, "applicants" => $applicants]];
-    // }
-
-    // public function jobs()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-
-    //     $criteria = [];
-    //     $statment = 'SELECT j.*, c.name as catName, (SELECT count(*) 
-    //                     as count FROM applicants a WHERE a.jobId = j.id) as count FROM job j LEFT JOIN 
-    //                     category c ON c.id = j.categoryId';
-    //     if (isset($this->get['category_name']) && $this->get['category_name'] != "All") {
-    //         $statment .= ' WHERE j.categoryId =:categoryId ';
-    //         $criteria = [
-    //             'categoryId' => $this->get['category_name']
-    //         ];
-    //     }
-    //     if ($_SESSION['userDetails']['usertype'] == 'CLIENT') {
-    //         if (isset($this->get['category_name']) && $this->get['category_name'] != "All") {
-    //             $statment .= ' AND j.userId =:userId ';
-    //             $criteria['userId'] = $_SESSION['userDetails']['id'];
-    //         } else {
-    //             $statment .= ' WHERE j.userId =:userId ';
-    //             $criteria['userId'] = $_SESSION['userDetails']['id'];
-    //         }
-    //     }
-
-    //     $jobs = $this->dbJobs->customFind($statment, $criteria);
-    //     $categories = $this->dbCat->findAll();
-    //     return ['template' => "admin/jobs.html.php", 'title' => 'jobs', 'variables' =>
-    //     ["jobs" => $jobs, "categories" => $categories]];
-    // }
-
-    // public function addEditCategory()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-    //     $template = "admin/editcategory.html.php";
-    //     if (isset($this->post['submit'])) {
-    //         $criteria = [
-    //             'name' => $this->post['name'],
-
-    //         ];
-    //         if (isset($this->post['id']) && !empty($this->post['id'])) {
-    //             $criteria['id'] = $this->post['id'];
-    //             $this->dbCat->update($criteria);
-    //         } else {
-    //             $this->dbCat->insert($criteria);
-    //         }
-    //         header('Location: categories');
-    //     }
-
-    //     if (isset($this->get['id'])) {
-    //         $currentCategory = $this->dbCat->find("id", $this->get['id'])[0];
-    //     } else {
-    //         $currentCategory = false;
-    //     }
-    //     return ['template' => $template, 'title' => 'editcategories', 'variables' => ["currentCategory" => $currentCategory]];
-    // }
-    // public function deletecategory()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-    //     $category = $this->dbCat->delete("id", $this->post['id']);
-    //     header('location: categories');
-    // }
-
-    // public function addjob()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-    //     $template = "admin/addjob.html.php";
-    //     $userId = NULL;
-    //     if ($_SESSION['userDetails']['usertype'] == 'CLIENT') {
-    //         $userId = $_SESSION['userDetails']['id'];
-    //     }
-
-    //     if (isset($this->post['submit'])) {
-    //         $criteria = [
-    //             'title' => $this->post['title'],
-    //             'description' => $this->post['description'],
-    //             'salary' => $this->post['salary'],
-    //             'location' => $this->post['location'],
-    //             'categoryId' => $this->post['categoryId'],
-    //             'closingDate' => $this->post['closingDate'],
-    //             'userId' => $userId
-    //         ];
-
-    //         $job = $this->dbJobs->insert($criteria);
-
-    //         header("Location: jobs");
-    //     }
-    //     $categories = $this->dbCat->findAll();
-    //     return [
-    //         'template' => $template, 'title' => 'addjob',
-    //         'variables' => ["categories" => $categories]
-    //     ];
-    // }
-    // public function editjob()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-    //     $template = "admin/editjob.html.php";
-    //     $categories = $this->dbCat->findAll();
-
-    //     $job = $this->dbJobs->find("id", $this->get['id'])[0];
-    //     if (isset($this->post['submit'])) {
-    //         $criteria = [
-    //             'id' => $this->post['id'],
-    //             'title' => $this->post['title'],
-    //             'description' => $this->post['description'],
-    //             'salary' => $this->post['salary'],
-    //             'location' => $this->post['location'],
-    //             'categoryId' => $this->post['categoryId'],
-    //             'closingDate' => $this->post['closingDate'],
-    //         ];
-
-    //         $this->dbJobs->update($criteria);
-    //         header("Location: jobs");
-    //     }
-    //     return [
-    //         'template' => $template, 'title' => 'editjob',
-    //         'variables' => ["job" => $job, "categories" => $categories]
-    //     ];
-    // }
-
-    // public function deletejob()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-    //     $criteria = [
-    //         'archive' => 1,
-    //         'id' => $this->post['id']
-    //     ];
-    //     $job = $this->dbJobs->update($criteria);
-    //     header("Location: jobs");
-    // }
-    // public function repostjob()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-    //     $criteria = [
-    //         'archive' => null,
-    //         'id' => $this->post['id']
-    //     ];
-    //     $job = $this->dbJobs->update($criteria);
-    //     header("Location: jobs");
-    // }
-    // public function enquiry()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-
-    //     $statement = 'SELECT c.*, a.fullname FROM contact
-    //     c LEFT JOIN admin a ON a.id = c.adminId';
-
-    //     $contacts = $this->dbContact->customFind($statement, []);
-    //     return [
-    //         'template' => 'admin/enquire.html.php', 'title' => 'Enquiries',
-    //         'variables' => ["contacts" => $contacts]
-    //     ];
-    // }
-    // public function updateEnquiry()
-    // {
-    //     $this->session();
-    //     $this->chklogin();
-
-    //     $values = [
-
-    //         'id' => $this->post['id'],
-    //         'adminId' => $_SESSION['userDetails']['id']
-    //     ];
-
-    //     $statement = 'SELECT c.*, a.fullname FROM contact c 
-    //                     LEFT JOIN admin a ON a.id = c.adminId';
-    //     $action = $this->dbContact->update($values);
-
-    //     $contacts = $this->dbContact->customFind($statement, []);
-
-    //     return [
-    //         'template' => 'admin/enquire.html.php', 'title' => 'Enquiries',
-    //         'variables' => ["contacts" => $contacts]
-    //     ];
-    // }
 
     public function users()
     {
