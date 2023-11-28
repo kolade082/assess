@@ -31,11 +31,7 @@ header {
     flex-direction: column;
 }
 
-.auth-links {
-    display: flex;
-    justify-content: flex-end; 
-    width: 100%;
-}
+
 
 .auth-links {
     display: flex;
@@ -744,8 +740,4 @@ input[type="text"]:focus, input[type="password"]:focus {
     color: rgb(180, 180, 180); /* Replace with your desired hover text color */
 }
 
-.sync-btn{
-    display: flex;
-    flex-direction: row;;
-    margin-left: 5em;
-}
+.

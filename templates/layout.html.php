@@ -10,7 +10,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../styles.css" media="screen">
+    <link rel="stylesheet" href="../mobile.css" media="screen and (max-width: 800px)">
+    <link rel="stylesheet" href="../desktop.css" media="screen and (min-width: 800px)">
 
     <title>Assess</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -18,11 +20,20 @@
 <body>
 
     <header>
-        <div class="header-container">
+        <div>
             <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true): ?>
-                <div class="auth-links">
-                    <p><a href="../admin/logout">Logout</a></p>
-                    <p><a href="../admin/dashboard">Dashboard</a></p>
+                <div class="d-flex flex-row justify-content-between p-0">
+                    <div id="ogLogo" >
+                        <img  src="" alt="nhs logo">
+                    </div>
+                    <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="auth-links">
+                        <p><a href="../admin/logout">Logout</a></p>
+                        <p><a href="../admin/dashboard">Dashboard</a></p>
+                    </div>
                 </div>
             <?php else: ?>
                 <div class="auth-links">
@@ -30,20 +41,38 @@
                     <p><a href="../admin/login" class="admin-login">Login</a></p>
                 </div>
             <?php endif; ?>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
 
-                    <li><a href="../about">About Us</a></li>
-                    <li><a href="../contact">Contact Us</a></li>
-                    <li><a href="../faqs">Faqs</a></li>
-                </ul>
+            <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-light p-0">
+                <div class="container-fluid p-0">
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <!--  -->
+                            <li class="nav-item " id="moblogo">
+                            <a class="nav-link active" aria-current="page" href="#"><img src="#" alt="nhs logo" class=""></a>
+                                
+                            </li>
+                            <li class="nav-item">
+                                
+                            </li> <!-- should be removed no use -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="../about">About Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../contact">Contact</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../faqs">FAQs</a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </div>
             </nav>
 
         </div>
     </header>
     <div>
-        <?= $output ?? ""; ?>
+        <?= $output ?? ""; ?> <!-- main goes here -->
     </div>
 
 

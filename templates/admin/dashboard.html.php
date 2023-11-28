@@ -28,7 +28,9 @@
             <h2 class="h2 fw-bold">Real-Time Alerts</h2>
             <div id="realTimeAlerts">
                 <?=$html?> <!-- apply this class on the button - class="btn btn-custom"
-                                and p tag -  class="lead" -->
+                                and p tag -  class="lead" 
+                                want to add a toggle switch to change btw current implementaiton and richard's implementaiton along with 'x'-->
+
             </div>
         </div>
 
