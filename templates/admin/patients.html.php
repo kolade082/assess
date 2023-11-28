@@ -14,9 +14,9 @@
             <thead>
                 <tr>
                     <th>NHS ID</th>
-                    <th>Name</th>
+                    <th>First name</th>
+                    <th>Last name</th>
                     <th>DOB</th>
-                    <th>Age</th>
                     <th>Gender</th>
                     <th>Email</th>
                     <th>Phone Number</th>
@@ -29,7 +29,8 @@
                 <tr>
                     <td><?= htmlspecialchars($patient['id']) ?></td>
                     <td><?= htmlspecialchars($patient['firstname']) ?></td>
-                    <td><?= htmlspecialchars($patient['lastname']) ?></td>
+                    <td></td>
+                    <!-- <td><?= htmlspecialchars($patient['lastname']) ?></td> -->
                     <td><?= htmlspecialchars($patient['dob']) ?></td>
                     <td><?= htmlspecialchars($patient['gender']) ?></td>
                     <td><?= htmlspecialchars($patient['email']) ?></td>

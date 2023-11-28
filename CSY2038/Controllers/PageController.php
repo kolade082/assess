@@ -16,6 +16,10 @@ class PageController
     private $dbPat;
     private $dbContact;
 
+    private $get;
+    private $post;
+    
+
     public function __construct(
         DatabaseTable $dbUsers,
         DatabaseTable $dbPat,
